@@ -67,18 +67,45 @@ const formatTable = (response: FormattedResponse[]): string => {
   return '```\n' + table(
     tableData,
     {
-    // border: getBorderCharacters('void'),
       columnDefault: {
         alignment: 'right',
-        // width: 3,
-        //   paddingLeft: 0,
-        //   paddingRight: 1,
       },
       singleLine: true,
-      // drawHorizontalLine: () => false,
-    //   return false
     },
   ) + '\n```'
 }
 
-export {formatMd, formatTable}
+const formatNarrowTable = (response: FormattedResponse[]): string => {
+  const data = sort(response)
+
+  const mapApp = (os: 'ios' | 'android') => (app: any) => {
+    const stat = (a: any, b: any) => getStat(app, a, b)
+    return [
+      app.name + os === 'ios' ? '📱' : '🟩',
+      stat(os, 'users'),
+      stat(os, 'newUsers'),
+      stat(os, 'crashes'),
+      stat(os, 'errors'),
+    ]
+  }
+  const iosData = data.map(mapApp('ios'))
+  const androidData = data.map(mapApp('android'))
+
+  const tableData = [
+    ['Name', 'usr', 'new', 'cr', 'er'],
+    ...iosData,
+    ...androidData,
+  ]
+  debug(tableData)
+
+  return '```\n' + table(
+    tableData,
+    {
+      columnDefault: {
+        alignment: 'right',
+      },
+      singleLine: true,
+    },
+  ) + '\n```'
+}
+export {formatMd, formatTable, formatNarrowTable}

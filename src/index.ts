@@ -1,5 +1,6 @@
 import {Command, flags} from '@oclif/command'
-import {formatMd, formatTable} from './appmetrica/format'
+import {formatMd, formatNarrowTable, formatTable} from './appmetrica/format'
+import {parseMonthly} from './appmetrica/parse-month'
 import {getAll} from './request'
 import send = require('./telegram/bot')
 const debug = require('debug')('MAIN')
@@ -11,6 +12,7 @@ class AppmetricaReporter extends Command {
     // add --version flag to show CLI version
     version: flags.version({char: 'v'}),
     help: flags.help({char: 'h'}),
+    format: flags.enum({  }),
   }
 
   static args = [{name: 'file'}]
@@ -22,10 +24,15 @@ class AppmetricaReporter extends Command {
 
     try {
       const data = await getAll()
+
+      const res = parseMonthly(data[0], data[1], data[2]) // ?
+
       debug('Got all')
-      const messageMd = formatMd(data)
-      send(messageMd, 'md')
-      const messageTable = formatTable(data)
+
+      const messageMd = formatMd(res)
+      await send(messageMd, 'md')
+
+      const messageTable = formatNarrowTable(res)
       await send(messageTable, 'md')
     } catch (error) {
       debug(error)

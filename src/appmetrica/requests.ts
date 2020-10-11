@@ -64,10 +64,7 @@ const allRequests = (ids: string[]) => {
 
 const Api = {
   getAll: (ids: string[]) => {
-    return axios.all(allRequests(ids))
-    .then(axios.spread((mUsers, mCrashes, mErrors) => {
-      return parseMonthly(mUsers, mCrashes, mErrors)
-    }))
+    return Promise.all(allRequests(ids))
   },
 }
 
