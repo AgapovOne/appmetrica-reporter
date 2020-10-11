@@ -14,6 +14,7 @@
     "axios": "^0.20.0",
     "node-telegram-bot-api": "^0.50.0",
     "ramda": "^0.27.1",
+    "table": "^6.0.3",
     "tslib": "^1.14.1"
   },
   "devDependencies": {
@@ -25,6 +26,7 @@
     "@types/node": "^10.17.39",
     "@types/node-telegram-bot-api": "^0.50.3",
     "@types/ramda": "^0.27.23",
+    "@types/table": "^6.0.0",
     "chai": "^4.2.0",
     "debug": "^4.2.0",
     "eslint": "^5.16.0",
@@ -55,7 +57,8 @@
   "scripts": {
     "posttest": "eslint . --ext .ts --config .eslintrc",
     "prepack": "rm -rf lib && tsc -b && oclif-dev readme",
-    "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
+    "test": "nyc --extension .ts mocha --forbid-only \"**/*.test.ts\"",
+    "watch": "chokidar \"**/*.ts\" -c \"npm test\"",
     "version": "oclif-dev readme && git add README.md"
   },
   "types": "lib/index.d.ts"

@@ -4,7 +4,4 @@ import {Api} from './appmetrica/requests'
 
 debug('request')(initialAppsList)
 
-const getAll = Api
-.getAll(initialAppsList.filter(app => app.id).map(app => app.id))
-
-export = getAll
+export const getAll = Api.getAll.bind(null, initialAppsList.filter(app => app.id).map(app => app.id))

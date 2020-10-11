@@ -1,5 +1,6 @@
 import {expect} from 'chai'
-import {format, FormattedResponse} from './format'
+import {log} from 'console'
+import {formatTable, FormattedResponse} from './format'
 
 const data: FormattedResponse[] = [
   {
@@ -44,4 +45,8 @@ const data: FormattedResponse[] = [
   },
 ]
 
-expect(format(data)).to.be.a('WOW')
+const received = formatTable(data)
+
+log(received)
+
+expect(received).to.be.not.null

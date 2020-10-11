@@ -1,6 +1,6 @@
 import {Command, flags} from '@oclif/command'
-import {formatMd} from './appmetrica/format'
-import getAll = require('./request')
+import {formatMd, formatTable} from './appmetrica/format'
+import {getAll} from './request'
 import send = require('./telegram/bot')
 const debug = require('debug')('MAIN')
 
@@ -20,16 +20,18 @@ class AppmetricaReporter extends Command {
 
     this.log('STARTED REQUESTS')
 
-    return getAll
-    .then(data => {
+    try {
+      const data = await getAll()
       debug('Got all')
-      send(formatMd(data))
-    })
-    .catch(error => {
+      const messageMd = formatMd(data)
+      send(messageMd, 'md')
+      const messageTable = formatTable(data)
+      await send(messageTable, 'md')
+    } catch (error) {
       debug(error)
       this.log('ERRR', error)
-      // return error
-    })
+      this.error(error)
+    }
   }
 }
 
