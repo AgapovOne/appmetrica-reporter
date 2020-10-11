@@ -1,4 +1,8 @@
 import {Command, flags} from '@oclif/command'
+import {formatMd} from './appmetrica/format'
+import getAll = require('./request')
+import send = require('./telegram/bot')
+const debug = require('debug')('MAIN')
 
 class AppmetricaReporter extends Command {
   static description = 'describe the command here'
@@ -7,22 +11,25 @@ class AppmetricaReporter extends Command {
     // add --version flag to show CLI version
     version: flags.version({char: 'v'}),
     help: flags.help({char: 'h'}),
-    // flag with a value (-n, --name=VALUE)
-    name: flags.string({char: 'n', description: 'name to print'}),
-    // flag with no value (-f, --force)
-    force: flags.boolean({char: 'f'}),
   }
 
   static args = [{name: 'file'}]
 
   async run() {
-    const {args, flags} = this.parse(AppmetricaReporter)
+    // const {args, flags} = this.parse(AppmetricaReporter)
 
-    const name = flags.name ?? 'world'
-    this.log(`hello ${name} from ./src/index.ts`)
-    if (args.file && flags.force) {
-      this.log(`you input --force and --file: ${args.file}`)
-    }
+    this.log('STARTED REQUESTS')
+
+    return getAll
+    .then(data => {
+      debug('Got all')
+      send(formatMd(data))
+    })
+    .catch(error => {
+      debug(error)
+      this.log('ERRR', error)
+      // return error
+    })
   }
 }
 
