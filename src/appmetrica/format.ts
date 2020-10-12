@@ -16,6 +16,9 @@ export interface FormattedResponse {
   android: OneOS;
 }
 
+const iOSSymbol = '🍏'
+const androidSymbol = '🤖'
+
 const getStat = (
   input: FormattedResponse,
   os: 'ios' | 'android',
@@ -33,8 +36,8 @@ const formatMd = (response: FormattedResponse[]): string => {
   return '*Отчет за неделю*\n' + sort(response)
   .map(app => {
     const stat = (a: any, b: any) => getStat(app, a, b)
-    const ios = `${app.name}📱\t🧑‍🤝‍🧑${stat('ios', 'users')}\t🆕${stat('ios', 'newUsers')}\t☠️${stat('ios', 'crashes')}\t⚠️${stat('ios', 'errors')}`
-    const android = `${app.name}🟩\t🧑‍🤝‍🧑${stat('android', 'users')}\t🆕${stat('android', 'newUsers')}\t☠️${stat('android', 'crashes')}\t⚠️${stat('android', 'errors')}`
+    const ios = `${app.name}${iOSSymbol}\t🧑‍🤝‍🧑${stat('ios', 'users')}\t🆕${stat('ios', 'newUsers')}\t☠️${stat('ios', 'crashes')}\t⚠️${stat('ios', 'errors')}`
+    const android = `${app.name}${androidSymbol}\t🧑‍🤝‍🧑${stat('android', 'users')}\t🆕${stat('android', 'newUsers')}\t☠️${stat('android', 'crashes')}\t⚠️${stat('android', 'errors')}`
     return [ios, android].join('\n')
   }).join('\n')
 }
@@ -45,12 +48,12 @@ const formatTable = (response: FormattedResponse[]): string => {
     const stat = (a: any, b: any) => getStat(app, a, b)
     return [
       app.name,
-      '📱',
+      iOSSymbol,
       stat('ios', 'users'),
       stat('ios', 'newUsers'),
       stat('ios', 'crashes'),
       stat('ios', 'errors'),
-      '🟩',
+      androidSymbol,
       stat('android', 'users'),
       stat('android', 'newUsers'),
       stat('android', 'crashes'),
@@ -81,7 +84,7 @@ const formatNarrowTable = (response: FormattedResponse[]): string => {
   const mapApp = (os: 'ios' | 'android') => (app: any) => {
     const stat = (a: any, b: any) => getStat(app, a, b)
     return [
-      app.name + (os === 'ios' ? '📱' : '🟩'),
+      app.name + (os === 'ios' ? iOSSymbol : androidSymbol),
       stat(os, 'users'),
       stat(os, 'newUsers'),
       stat(os, 'crashes'),
