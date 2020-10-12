@@ -1,7 +1,7 @@
 {
   "name": "appmetrica-reporter",
   "description": "Reports from appmetrica",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "author": "Alexey Agapov @AgapovOne",
   "bin": {
     "appmrep": "./bin/run"

@@ -19,7 +19,7 @@ $ npm install -g appmetrica-reporter
 $ appmrep COMMAND
 running command...
 $ appmrep (-v|--version|version)
-appmetrica-reporter/0.0.0 darwin-x64 node-v13.6.0
+appmetrica-reporter/0.1.0 darwin-x64 node-v13.6.0
 $ appmrep --help [COMMAND]
 USAGE
   $ appmrep COMMAND
