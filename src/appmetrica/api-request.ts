@@ -1,6 +1,6 @@
 // @flow
 import axios from 'axios'
-import {env} from 'process'
+import {environment} from '../env'
 
 const apiRequest = axios.create({
   baseURL: 'https://api.appmetrica.yandex.ru',
@@ -11,7 +11,7 @@ const apiRequest = axios.create({
 
 apiRequest.interceptors.request.use(
   config => {
-    const token = env.TOKEN
+    const token = environment.accessToken
     if (token) {
       config.headers.Authorization = 'OAuth ' + token
     }
