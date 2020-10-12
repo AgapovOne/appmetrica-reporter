@@ -1,3 +1,4 @@
+require('dotenv').config()
 import {env} from 'process'
 
 export const environment = {
