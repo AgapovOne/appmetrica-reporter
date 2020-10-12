@@ -81,7 +81,7 @@ const formatNarrowTable = (response: FormattedResponse[]): string => {
   const mapApp = (os: 'ios' | 'android') => (app: any) => {
     const stat = (a: any, b: any) => getStat(app, a, b)
     return [
-      app.name + os === 'ios' ? '📱' : '🟩',
+      app.name + (os === 'ios' ? '📱' : '🟩'),
       stat(os, 'users'),
       stat(os, 'newUsers'),
       stat(os, 'crashes'),
