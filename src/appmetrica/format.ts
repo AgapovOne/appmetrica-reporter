@@ -64,7 +64,7 @@ const formatTable = (response: FormattedResponse[]): string => {
   ]
   debug(tableData)
 
-  return '```\n' + table(
+  return '*Отчет за неделю*\n' + '```\n' + table(
     tableData,
     {
       columnDefault: {
@@ -98,7 +98,7 @@ const formatNarrowTable = (response: FormattedResponse[]): string => {
   ]
   debug(tableData)
 
-  return '```\n' + table(
+  return '*Отчет за неделю*\n' + '```\n' + table(
     tableData,
     {
       columnDefault: {
