@@ -1,7 +1,5 @@
 // @flow
 import {apiRequest} from './api-request'
-import axios from 'axios'
-import {parseMonthly} from './parse-month'
 
 interface Params {
   dimensions: string;
@@ -23,7 +21,7 @@ type Fn = (n: any) => null;
 
 const defaultMonthlyParams: ParamsFunction = (ids, metric) => ({
   ...defaultParams(ids),
-  date1: '30daysAgo',
+  date1: '7daysAgo',
   dimensions: `ym:${metric}:appID,ym:${metric}:operatingSystem`,
 })
 
