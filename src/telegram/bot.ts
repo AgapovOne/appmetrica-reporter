@@ -6,10 +6,10 @@ const token = environment.tgToken
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, {polling: true})
 
-const chatId = environment.tgChatId
+const knownChatId = environment.tgChatId
 
-const send = async (message: string, format: 'md' | 'text', shouldStopPolling: boolean): Promise<any> => {
-  await bot.sendMessage(chatId, message, format === 'md' ? {parse_mode: 'MarkdownV2'} : undefined)
+const send = async (chatId: string | number | null, message: string, format: 'md' | 'text', shouldStopPolling: boolean): Promise<any> => {
+  await bot.sendMessage(chatId ?? knownChatId, message, format === 'md' ? {parse_mode: 'MarkdownV2'} : undefined)
   if (shouldStopPolling) await bot.stopPolling()
 }
 

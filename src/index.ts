@@ -24,11 +24,11 @@ class AppmetricaReporter extends Command {
       if (flags.listen) {
         await listen(flags.format)
       } else {
-        await generateAndSend(flags.format, true)
+        await generateAndSend(null, flags.format, true)
       }
     } catch (error) {
       debug(error)
-      this.log('ERRR', error)
+      this.log('ERR', error)
       this.error(error)
     }
   }

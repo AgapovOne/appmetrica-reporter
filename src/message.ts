@@ -10,7 +10,7 @@ enum Format {
   Text = 'text'
 }
 
-const generateAndSend = async (format: Format, shouldStopPolling: boolean): Promise<any> => {
+const generateAndSend = async (chatId: string | number | null, format: Format, shouldStopPolling: boolean): Promise<any> => {
   const data = await getAll()
 
   const res = parseMonthly(data[0], data[1], data[2]) // ?
@@ -33,16 +33,16 @@ const generateAndSend = async (format: Format, shouldStopPolling: boolean): Prom
     break
   }
 
-  await send(message, 'md', shouldStopPolling)
+  await send(chatId, message, 'md', shouldStopPolling)
 }
 
 const listen = async (format: Format) => {
   const send = async (id: string | number) => {
-    const message = await generateAndSend(format, false)
-    bot.sendMessage(id, message)
+    await generateAndSend(id, format, false)
   }
 
   bot.onText(/\/report/, async msg => {
+    debug('Got report request', format)
     send(msg.chat.id)
     // const message = await bot.sendMessage(
     //   msg.chat.id,
