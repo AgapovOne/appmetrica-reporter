@@ -1,8 +1,5 @@
 import {Command, flags} from '@oclif/command'
-import {formatMd, formatNarrowTable, formatTable} from './appmetrica/format'
-import {parseMonthly} from './appmetrica/parse-month'
-import {getAll} from './request'
-import send = require('./telegram/bot')
+import {Format, generateAndSend, listen} from './message'
 const debug = require('debug')('MAIN')
 
 class AppmetricaReporter extends Command {
@@ -12,7 +9,8 @@ class AppmetricaReporter extends Command {
     // add --version flag to show CLI version
     version: flags.version({char: 'v'}),
     help: flags.help({char: 'h'}),
-    format: flags.enum({char: 'f', options: ['wide-table', 'narrow-table', 'text'], description: 'format of message to telegram'}),
+    format: flags.enum({char: 'f', options: Object.values(Format), description: 'format of message to telegram'}),
+    listen: flags.boolean({char: 'l'}),
   }
 
   static args = [{name: 'file'}]
@@ -20,24 +18,13 @@ class AppmetricaReporter extends Command {
   async run() {
     const {args, flags} = this.parse(AppmetricaReporter)
 
-    this.log('STARTED REQUESTS')
+    this.log('START', flags)
 
     try {
-      const data = await getAll()
-
-      const res = parseMonthly(data[0], data[1], data[2]) // ?
-
-      debug('Got all with format: ', flags.format)
-
-      if (flags.format === 'wide-table') {
-        const messageTable = formatTable(res)
-        await send(messageTable, 'md')
-      } else if (flags.format === 'narrow-table') {
-        const messageTable = formatNarrowTable(res)
-        await send(messageTable, 'md')
+      if (flags.listen) {
+        await listen(flags.format)
       } else {
-        const messageMd = formatMd(res)
-        await send(messageMd, 'md')
+        await generateAndSend(flags.format, true)
       }
     } catch (error) {
       debug(error)
