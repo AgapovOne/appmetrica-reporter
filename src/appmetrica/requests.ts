@@ -16,54 +16,59 @@ const defaultParams = (ids: string[]) => ({
   limit: 1000,
 })
 
-type ParamsFunction = (ids: string[], metric: string) => Params
+type ParamsFunction = (ids: string[], period: Period, metric: string) => Params
 type Fn = (n: any) => null;
 
-const defaultMonthlyParams: ParamsFunction = (ids, metric) => ({
+enum Period {
+  Week = '7daysAgo',
+  Month = '30daysAgo'
+}
+
+const params: ParamsFunction = (ids, period, metric) => ({
   ...defaultParams(ids),
-  date1: '7daysAgo',
+  date1: period,
   dimensions: `ym:${metric}:appID,ym:${metric}:operatingSystem`,
 })
 
-const getUserStatistics = (ids: string[], params: ParamsFunction) =>
+const getUserStatistics = (ids: string[], period: Period, params: ParamsFunction) =>
   apiRequest.get('/stat/v1/data', {
     params: {
       metrics: 'ym:u:activeUsers,ym:u:newUsers',
-      ...params(ids, 'u'),
+      ...params(ids, period, 'u'),
     },
   })
   .then(({data}) => data)
 
-const getCrashStatistics = (ids: string[], params: ParamsFunction) =>
+const getCrashStatistics = (ids: string[], period: Period, params: ParamsFunction) =>
   apiRequest.get('/stat/v1/data', {
     params: {
       metrics: 'ym:cr:crashes',
-      ...params(ids, 'cr'),
+      ...params(ids, period, 'cr'),
     },
   })
   .then(({data}) => data)
 
-const getErrorStatistics = (ids: string[], params: ParamsFunction) =>
+const getErrorStatistics = (ids: string[], period: Period, params: ParamsFunction) =>
   apiRequest.get('/stat/v1/data', {
     params: {
       metrics: 'ym:er:errors',
-      ...params(ids, 'er'),
+      ...params(ids, period, 'er'),
     },
   })
   .then(({data}) => data)
 
-const allRequests = (ids: string[]) => {
+const allRequests = (ids: string[], period: Period) => {
   return [
-    getUserStatistics(ids, defaultMonthlyParams),
-    getCrashStatistics(ids, defaultMonthlyParams),
-    getErrorStatistics(ids, defaultMonthlyParams),
+    getUserStatistics(ids, period, params),
+    getCrashStatistics(ids, period, params),
+    getErrorStatistics(ids, period, params),
   ]
 }
 
 const Api = {
-  getAll: (ids: string[]) => {
-    return Promise.all(allRequests(ids))
+  getAll: (ids: string[], period: Period) => {
+    return Promise.all(allRequests(ids, period))
   },
 }
 
-export {Api}
+export {Api, Period}

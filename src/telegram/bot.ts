@@ -1,10 +1,10 @@
 import {environment} from './../env'
 import * as TelegramBot from 'node-telegram-bot-api'
-const debug = require('debug')('bot')
+const debug = require('debug')('MAIN-bot')
 
 const token = environment.tgToken
 // Create a bot that uses 'polling' to fetch new updates
-const bot = new TelegramBot(token, {polling: true})
+const bot = new TelegramBot(token, {polling: {params: {timeout: 30}}})
 
 const knownChatId = environment.tgChatId
 
@@ -21,6 +21,6 @@ bot.on('polling_error', err => {
   debug(err)
 })
 
-bot.setMyCommands([{command: 'report', description: 'отчет за неделю'}])
+bot.setMyCommands([{command: 'report', description: 'отчет. 1 параметр: [week/month], по умолчанию week. Например, /report week'}])
 
 export {send, bot}

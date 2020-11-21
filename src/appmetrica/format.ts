@@ -1,5 +1,6 @@
-import {table, getBorderCharacters} from 'table'
-const debug = require('debug')('format')
+import {table} from 'table'
+import {Period} from './requests'
+const debug = require('debug')('MAIN-format')
 
 interface OneOS {
   users: { current: number; previous: number};
@@ -30,10 +31,20 @@ const sort = (input: FormattedResponse[]) => input
   return (b.ios.users.current + b.android.users.current) - (a.ios.users.current + a.android.users.current)
 })
 
+const titleForPeriod = (period: Period): string => {
+  if (period === Period.Week) {
+    return 'Отчёт за неделю'
+  }
+  if (period === Period.Month) {
+    return 'Отчёт за месяц'
+  }
+  return ''
+}
+
 /// Format is specific to telegram markdown.
 /// https://core.telegram.org/bots/api#markdownv2-style
-const formatMd = (response: FormattedResponse[]): string => {
-  return '*Отчет за неделю*\n' + sort(response)
+const formatMd = (response: FormattedResponse[], period: Period): string => {
+  return '*' + titleForPeriod(period) + '*\n' + sort(response)
   .map(app => {
     const stat = (a: any, b: any) => getStat(app, a, b)
     const ios = `${app.name}${iOSSymbol}\t🧑‍🤝‍🧑${stat('ios', 'users')}\t🆕${stat('ios', 'newUsers')}\t☠️${stat('ios', 'crashes')}\t⚠️${stat('ios', 'errors')}`
@@ -42,7 +53,7 @@ const formatMd = (response: FormattedResponse[]): string => {
   }).join('\n')
 }
 
-const formatTable = (response: FormattedResponse[]): string => {
+const formatTable = (response: FormattedResponse[], period: Period): string => {
   const data = sort(response)
   .map(app => {
     const stat = (a: any, b: any) => getStat(app, a, b)
@@ -67,7 +78,7 @@ const formatTable = (response: FormattedResponse[]): string => {
   ]
   debug(tableData)
 
-  return '*Отчет за неделю*\n' + '```\n' + table(
+  return '*' + titleForPeriod(period) + '*\n' + '```\n' + table(
     tableData,
     {
       columnDefault: {
@@ -78,7 +89,7 @@ const formatTable = (response: FormattedResponse[]): string => {
   ) + '\n```'
 }
 
-const formatNarrowTable = (response: FormattedResponse[]): string => {
+const formatNarrowTable = (response: FormattedResponse[], period: Period): string => {
   const data = sort(response)
 
   const mapApp = (os: 'ios' | 'android') => (app: any) => {
@@ -101,7 +112,7 @@ const formatNarrowTable = (response: FormattedResponse[]): string => {
   ]
   debug(tableData)
 
-  return '*Отчет за неделю*\n' + '```\n' + table(
+  return '*' + titleForPeriod(period) + '*\n' + '```\n' + table(
     tableData,
     {
       columnDefault: {

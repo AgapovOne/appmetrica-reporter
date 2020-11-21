@@ -1,4 +1,5 @@
 import {Command, flags} from '@oclif/command'
+import {Period} from './appmetrica/requests'
 import {Format, generateAndSend, listen} from './message'
 const debug = require('debug')('MAIN')
 
@@ -24,7 +25,7 @@ class AppmetricaReporter extends Command {
       if (flags.listen) {
         await listen(flags.format)
       } else {
-        await generateAndSend(null, flags.format, true)
+        await generateAndSend(null, flags.format, Period.Week, true)
       }
     } catch (error) {
       debug(error)
