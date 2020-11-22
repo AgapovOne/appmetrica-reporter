@@ -1,6 +1,7 @@
 import {expect} from 'chai'
 import {log} from 'console'
 import {formatTable, FormattedResponse} from './format'
+import {Period} from './requests'
 
 const data: FormattedResponse[] = [
   {
@@ -45,7 +46,7 @@ const data: FormattedResponse[] = [
   },
 ]
 
-const received = formatTable(data)
+const received = formatTable(data, Period.Week)
 
 log(received)
 
