@@ -17,7 +17,7 @@ class AppmetricaReporter extends Command {
   static args = [{name: 'file'}]
 
   async run() {
-    const {args, flags} = this.parse(AppmetricaReporter)
+    const {flags} = this.parse(AppmetricaReporter)
 
     this.log('START', flags)
 
